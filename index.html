@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>FDCPX – Fidelity® Select Tech Hardware Portfolio</title>
+  <style>
+    :root {
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      --bg: #f6f7f9;
+      --card: #fff;
+      --tx: #14181f;
+      --mu: #5f6b7a;
+      --bd: #e1e5ea;
+      --ac: #1a6b4a;
+      --pos: #13803f;
+      --neg: #c62828;
+      color-scheme: light;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #0f1318;
+        --card: #171c23;
+        --tx: #e8ecf1;
+        --mu: #93a0b0;
+        --bd: #262d37;
+        --ac: #4cc38a;
+        --pos: #4cc38a;
+        --neg: #ff7b72;
+        color-scheme: dark;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #0f1318;
+      --card: #171c23;
+      --tx: #e8ecf1;
+      --mu: #93a0b0;
+      --bd: #262d37;
+      --ac: #4cc38a;
+      --pos: #4cc38a;
+      --neg: #ff7b72;
+      color-scheme: dark;
+    }
+
+    html {
+      scroll-padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--tx);
+      font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    h2 {
+      font-size: 1.05rem;
+      margin: 0 0 10px;
+    }
+
+    .sub {
+      color: var(--mu);
+      margin: 4px 0 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--bd);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+    }
+
+    .kpi {
+      border: 1px solid var(--bd);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+
+    .kpi b {
+      display: block;
+      font-size: 1.2rem;
+    }
+
+    .kpi span {
+      color: var(--mu);
+      font-size: .8rem;
+    }
+
+    .two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 720px) {
+      .two {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .scroll {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .9rem;
+    }
+
+    th,
+    td {
+      padding: 7px 8px;
+      text-align: right;
+      border-bottom: 1px solid var(--bd);
+      white-space: nowrap;
+    }
+
+    th:first-child,
+    td:first-child {
+      text-align: left;
+    }
+
+    th {
+      color: var(--mu);
+      font-weight: 600;
+      font-size: .78rem;
+    }
+
+    input {
+      width: 70px;
+      padding: 4px 6px;
+      border: 1px solid var(--bd);
+      border-radius: 6px;
+      background: var(--bg);
+      color: var(--tx);
+      text-align: right;
+      font: inherit;
+    }
+
+    .pos { color: var(--pos); }
+    .neg { color: var(--neg); }
+
+    .bar {
+      height: 8px;
+      border-radius: 4px;
+      background: var(--ac);
+      min-width: 2px;
+    }
+
+    .donut {
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+      margin: 0 auto;
+    }
+
+    .donut i {
+      display: block;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--card);
+      position: relative;
+      top: 35px;
+      left: 35px;
+    }
+
+    .legend {
+      font-size: .85rem;
+      margin-top: 12px;
+    }
+
+    .legend div {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 3px 0;
+    }
+
+    .legend s {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      display: inline-block;
+    }
+
+    #navTabs button {
+      border: 1px solid var(--ac);
+      border-radius: 16px;
+      padding: 3px 12px;
+      font: inherit;
+      font-size: .8rem;
+      cursor: pointer;
+    }
+
+    svg text {
+      fill: var(--mu);
+      font-size: 11px;
+    }
+
+    .note {
+      color: var(--mu);
+      font-size: .8rem;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <h1>
+      Fidelity® Select Tech Hardware Portfolio
+      <span style="color: var(--ac)">FDCPX</span>
+    </h1>
+    <p class="sub">
+      Actively managed sector equity fund · invests at least 80% in tech hardware companies · inception 29 Jul 1985
+    </p>
+
+    <section class="card">
+      <h2>Key parameters</h2>
+      <div class="grid" id="kpis"></div>
+      <p class="note">
+        Figures compiled from public fund pages (Morningstar, AAII, Investing.com, Yahoo Finance, Zacks)
+        in mid-2026 and may differ slightly between sources and dates.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>NAV over time</h2>
+      <div id="navTabs" style="display: flex; gap: 6px; margin-bottom: 8px">
+        <button data-r="all">All (2026)</button>
+        <button data-r="3m">3M</button>
+        <button data-r="1m">1M</button>
+      </div>
+      <div class="scroll">
+        <svg id="chart" viewBox="0 0 640 300" width="100%" role="img" aria-label="FDCPX NAV line chart"></svg>
+      </div>
+      <div id="navStats" style="display: flex; flex-wrap: wrap; gap: 4px 20px; font-size: .85rem; margin-top: 6px"></div>
+      <p class="note">
+        Daily closing NAV from 31 Jul to 9 Oct 2026 (latest data available from the source, Tiingo via StockAnalysis.com);
+        earlier months use sparse NAV observations from public quote pages. Hover a point for its value.
+        52-week range: $129.65 – $245.39.
+      </p>
+    </section>
+
+    <div class="two">
+      <section class="card">
+        <h2>Top holding weights</h2>
+        <div class="donut" id="donut"><i></i></div>
+        <div class="legend" id="legend"></div>
+      </section>
+
+      <section class="card">
+        <h2>Returns (as of 28 Sep 2026)</h2>
+        <table id="ret"></table>
+        <p class="note">
+          Source: Yahoo Finance trailing returns. Past performance does not predict future results.
+        </p>
+      </section>
+    </div>
+
+    <section class="card">
+      <h2>How each holding moves the fund price</h2>
+      <p class="note" style="margin-top: 0">
+        Contribution ≈ weight × the holding’s return. Edit any return to run a what-if;
+        the fund estimate updates. Weights and defaults are from a 22 Jul 2026 snapshot (daily moves); the "rest" row
+        is the residual that reconciles to the fund’s +0.39% NAV change.
+      </p>
+      <div class="scroll">
+        <table id="hold"></table>
+      </div>
+    </section>
+
+    <p class="note">
+      For information only, not investment advice. Weights are portfolio snapshots and change
+      as the managers trade. Verify on
+      <a href="https://fundresearch.fidelity.com" style="color: var(--ac)">Fidelity</a>
+      before acting.
+    </p>
+  </main>
+
+  <script>
+    // ---------- Key parameters ----------
+    const kpis = [
+      ["NAV (9 Oct 2026)", "$224.02"],
+      ["Net assets", "$3.9B – 4.2B"],
+      ["Expense ratio", "0.67%"],
+      ["TTM yield", "0.40%"],
+      ["Turnover", "53%"],
+      ["# holdings", "45"],
+      ["Top 10 weight", "~66%"],
+      ["Foreign issuers", "35.2%"],
+      ["Cash", "3.3%"],
+      ["52-wk range", "$129.65 – $245.39"],
+      ["Morningstar", "Gold Medalist · Large Growth"],
+      ["Min. investment", "$0 · No load"]
+    ];
+
+    document.getElementById("kpis").innerHTML = kpis
+      .map(k => `<div class="kpi"><b>${k[1]}</b><span>${k[0]}</span></div>`)
+      .join("");
+
+    // ---------- NAV chart ----------
+    // Sparse observations (Feb – Jul 22) followed by daily closes (Jul 31 – Oct 9, 2026)
+    const navRaw = "02-27:161.89,03-06:150.20,03-26:153.72,03-31:153.64,04-29:177.42,06-10:213.23,07-22:213.14," +
+      "07-31:206.41,08-03:209.09,08-04:217.59,08-05:215.05,08-06:210.17,08-07:209.39,08-10:209.51,08-11:210.47," +
+      "08-12:218.19,08-13:220.50,08-14:221.87,08-17:227.07,08-18:217.69,08-19:212.71,08-20:213.10,08-21:215.62," +
+      "08-24:209.85,08-25:212.45,08-26:215.53,08-27:216.76,08-28:212.44,08-31:213.96,09-01:211.76,09-02:213.79," +
+      "09-03:215.15,09-04:219.46,09-08:221.75,09-09:220.22,09-10:216.83,09-11:221.02,09-14:213.38,09-15:213.08," +
+      "09-16:213.88,09-17:217.90,09-18:220.67,09-21:226.38,09-22:227.05,09-23:224.76,09-24:222.78,09-25:225.95," +
+      "09-28:221.81,09-29:222.05,09-30:221.39,10-01:224.86,10-02:226.42,10-05:227.10,10-06:227.29,10-07:225.63," +
+      "10-08:220.82,10-09:224.02";
+
+    const nav = navRaw.split(",").map(pair => {
+      const [md, v] = pair.split(":");
+      return { date: "2026-" + md, v: parseFloat(v) };
+    });
+
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct"];
+    let navRange = "all";
+
+    function drawChart() {
+      const W = 640, H = 300;
+      const left = 48, right = 16, top = 16, bottom = 30;
+      const last = nav[nav.length - 1];
+      const days = { all: 9999, "3m": 92, "1m": 31 }[navRange];
+      const cutoff = +new Date(last.date) - days * 86400000;
+      const data = nav.filter(n => +new Date(n.date) >= cutoff);
+
+      const t0 = +new Date(data[0].date);
+      const t1 = +new Date(last.date);
+      const vals = data.map(n => n.v);
+      const lo = Math.min(...vals), hi = Math.max(...vals);
+      const step = (hi - lo) > 60 ? 20 : (hi - lo) > 20 ? 10 : 5;
+      const yMin = Math.floor((lo - 2) / step) * step;
+      const yMax = Math.ceil((hi + 2) / step) * step;
+
+      const X = d => left + (+new Date(d) - t0) / (t1 - t0) * (W - left - right);
+      const Y = v => top + (yMax - v) / (yMax - yMin) * (H - top - bottom);
+
+      let svg = "";
+
+      // Grid and y labels
+      for (let v = yMin; v <= yMax; v += step) {
+        svg += `<line x1="${left}" x2="${W - right}" y1="${Y(v)}" y2="${Y(v)}" stroke="currentColor" opacity=".12"/>`;
+        svg += `<text x="${left - 6}" y="${Y(v) + 4}" text-anchor="end">$${v}</text>`;
+      }
+
+      // X labels: months for long ranges, weekly dates for short ones
+      if (navRange === "all") {
+        for (let m = 2; m <= 9; m++) {
+          const d = "2026-" + String(m + 1).padStart(2, "0") + "-01";
+          if (+new Date(d) >= t0) {
+            svg += `<text x="${X(d)}" y="${H - 8}" text-anchor="middle">${monthNames[m]}</text>`;
+          }
+        }
+      } else {
+        const every = navRange === "3m" ? 14 : 7;
+        data.forEach((n, i) => {
+          if (i % every === 0) {
+            svg += `<text x="${X(n.date)}" y="${H - 8}" text-anchor="middle">${monthNames[+n.date.slice(5, 7) - 1]} ${+n.date.slice(8)}</text>`;
+          }
+        });
+      }
+
+      // Area + line
+      const pts = data.map(n => X(n.date) + "," + Y(n.v));
+      svg += `<polygon points="${X(data[0].date)},${Y(yMin)} ${pts.join(" ")} ${X(last.date)},${Y(yMin)}" fill="var(--ac)" opacity=".12"/>`;
+      svg += `<polyline points="${pts.join(" ")}" fill="none" stroke="var(--ac)" stroke-width="2" stroke-linejoin="round"/>`;
+
+      // Points with tooltips (dense data gets smaller dots)
+      const r = data.length > 40 ? 2.5 : 4;
+      data.forEach((n, i) => {
+        const prev = data[i - 1];
+        const chg = prev ? ` (${fmtPct((n.v / prev.v - 1) * 100)} vs prior obs.)` : "";
+        svg += `<circle cx="${X(n.date)}" cy="${Y(n.v)}" r="${r}" fill="var(--ac)"><title>${n.date}: $${n.v.toFixed(2)}${chg}</title></circle>`;
+      });
+
+      // Latest value marker
+      svg += `<text x="${X(last.date)}" y="${Y(last.v) - 10}" text-anchor="end" style="fill: var(--tx); font-weight: 600">$${last.v.toFixed(2)}</text>`;
+
+      document.getElementById("chart").innerHTML = svg;
+
+      // Range summary
+      const first = data[0], chgPct = (last.v / first.v - 1) * 100;
+      document.getElementById("navStats").innerHTML =
+        `<span>Range: <b>$${lo.toFixed(2)} – $${hi.toFixed(2)}</b></span>` +
+        `<span>Change: <b class="${chgPct >= 0 ? "pos" : "neg"}">${fmtPct(chgPct)}</b> (${first.date} → ${last.date})</span>`;
+
+      document.querySelectorAll("#navTabs button").forEach(b => {
+        b.style.background = b.dataset.r === navRange ? "var(--ac)" : "transparent";
+        b.style.color = b.dataset.r === navRange ? "var(--card)" : "var(--tx)";
+      });
+    }
+
+    function fmtPct(v) {
+      return (v >= 0 ? "+" : "") + v.toFixed(2) + "%";
+    }
+
+    document.querySelectorAll("#navTabs button").forEach(b => {
+      b.onclick = () => {
+        navRange = b.dataset.r;
+        drawChart();
+      };
+    });
+    drawChart();
+
+    // ---------- Holdings data ----------
+    // [name, weight %, price, daily return %]
+    const holdings = [
+      ["Western Digital (WDC)", 11.70, "$556.67", 1.51],
+      ["Cisco Systems (CSCO)", 11.20, "$112.21", 0.03],
+      ["Samsung Electronics (005930.KS)", 7.46, "₩270,000", 3.65],
+      ["Apple (AAPL)", 6.69, "$325.89", -0.56],
+      ["Arista Networks (ANET)", 6.43, "$174.87", 0.17]
+    ];
+
+    const fundReturn = 0.39;
+    const topWeight = holdings.reduce((sum, h) => sum + h[1], 0);
+    const restWeight = 100 - topWeight;
+    const topContribution = holdings.reduce((sum, h) => sum + h[1] * h[3] / 100, 0);
+    const restReturn = (fundReturn - topContribution) / restWeight * 100;
+
+    const rows = holdings.concat([
+      ["Rest of portfolio (~36 holdings + cash)", restWeight, "–", +restReturn.toFixed(2)]
+    ]);
+
+    // ---------- Donut chart + legend ----------
+    const colors = ["#1a6b4a", "#2f80ed", "#e0a100", "#8e44ad", "#d9534f", "#8a96a3"];
+    let cumulative = 0;
+
+    const stops = rows.map((h, i) => {
+      const start = cumulative;
+      cumulative += h[1];
+      return `${colors[i]} ${start}% ${cumulative}%`;
+    });
+    document.getElementById("donut").style.background = `conic-gradient(${stops.join(",")})`;
+
+    document.getElementById("legend").innerHTML = rows
+      .map((h, i) => `
+        <div>
+          <s style="background: ${colors[i]}"></s>${h[0]}
+          <b style="margin-left: auto">${h[1].toFixed(2)}%</b>
+        </div>`)
+      .join("");
+
+    // ---------- Returns table ----------
+    const returns = [
+      ["YTD", 68.82],
+      ["1 month", 3.72],
+      ["3 months", -2.80],
+      ["1 year", 94.12],
+      ["3 years (annualized)", 46.55]
+    ];
+
+    document.getElementById("ret").innerHTML =
+      "<tr><th>Period</th><th>Total return</th></tr>" +
+      returns
+        .map(r => `<tr><td>${r[0]}</td><td class="${r[1] >= 0 ? "pos" : "neg"}">${r[1] >= 0 ? "+" : ""}${r[1].toFixed(2)}%</td></tr>`)
+        .join("");
+
+    // ---------- Contribution table ----------
+    const signClass = v => (v >= 0 ? "pos" : "neg");
+    const fmt = v => (v >= 0 ? "+" : "") + v.toFixed(2);
+
+    function drawContributions() {
+      const maxAbs = Math.max(...rows.map(h => Math.abs(h[1] * h[3] / 100)), 0.01);
+      let total = 0;
+
+      let html = `
+        <tr>
+          <th>Holding</th><th>Weight</th><th>Price</th>
+          <th>Return %</th><th>Contribution (pp)</th><th>Impact</th>
+        </tr>`;
+
+      rows.forEach((h, i) => {
+        const c = h[1] * h[3] / 100;
+        total += c;
+        html += `
+          <tr>
+            <td>${h[0]}</td>
+            <td>${h[1].toFixed(2)}%</td>
+            <td>${h[2]}</td>
+            <td><input type="number" step="0.01" value="${h[3]}" data-i="${i}"></td>
+            <td class="${signClass(c)}">${fmt(c)}</td>
+            <td style="width: 90px">
+              <div class="bar" style="width: ${Math.abs(c) / maxAbs * 80}px; background: var(${c >= 0 ? "--pos" : "--neg"})"></div>
+            </td>
+          </tr>`;
+      });
+
+      html += `
+        <tr>
+          <td><b>Estimated fund move</b></td>
+          <td><b>100%</b></td><td></td><td></td>
+          <td class="${signClass(total)}"><b>${fmt(total)}%</b></td>
+          <td></td>
+        </tr>`;
+
+      const table = document.getElementById("hold");
+      table.innerHTML = html;
+
+      table.querySelectorAll("input").forEach(input => {
+        input.onchange = () => {
+          rows[+input.dataset.i][3] = parseFloat(input.value) || 0;
+          drawContributions();
+        };
+      });
+    }
+
+    drawContributions();
+  </script>
+</body>
+
+</html>
