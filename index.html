@@ -10,24 +10,24 @@
       box-sizing: border-box;
       padding-top: env(safe-area-inset-top, 0px);
       padding-bottom: env(safe-area-inset-bottom, 0px);
-      --bg: #f6f7f9;
-      --card: #fff;
-      --tx: #14181f;
-      --mu: #5f6b7a;
-      --bd: #e1e5ea;
-      --ac: #1a6b4a;
-      --pos: #13803f;
-      --neg: #c62828;
-      color-scheme: light;
+      --bg: #141862;
+      --card: #0b0d10;
+      --tx: #e8ecf1;
+      --mu: #93a0b0;
+      --bd: #242b33;
+      --ac: #4cc38a;
+      --pos: #4cc38a;
+      --neg: #ff7b72;
+      color-scheme: dark;
     }
 
     @media (prefers-color-scheme: dark) {
       :root:not([data-theme="light"]) {
-        --bg: #0f1318;
-        --card: #171c23;
+        --bg: #000;
+        --card: #0b0d10;
         --tx: #e8ecf1;
         --mu: #93a0b0;
-        --bd: #262d37;
+        --bd: #242b33;
         --ac: #4cc38a;
         --pos: #4cc38a;
         --neg: #ff7b72;
@@ -36,11 +36,11 @@
     }
 
     :root[data-theme="dark"] {
-      --bg: #0f1318;
-      --card: #171c23;
+      --bg: #000;
+      --card: #0b0d10;
       --tx: #e8ecf1;
       --mu: #93a0b0;
-      --bd: #262d37;
+      --bd: #242b33;
       --ac: #4cc38a;
       --pos: #4cc38a;
       --neg: #ff7b72;
@@ -63,7 +63,7 @@
     }
 
     main {
-      max-width: 1000px;
+      max-width: 1320px;
       margin: 0 auto;
       padding: 20px 16px 40px;
     }
@@ -93,8 +93,14 @@
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 520px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
     .kpi {
@@ -255,17 +261,21 @@
     <section class="card">
       <h2>NAV over time</h2>
       <div id="navTabs" style="display: flex; gap: 6px; margin-bottom: 8px">
-        <button data-r="all">All (2026)</button>
+        <button data-r="6m">6M</button>
         <button data-r="3m">3M</button>
         <button data-r="1m">1M</button>
+        <label style="margin-left: auto; font-size: .8rem; color: var(--mu); cursor: pointer; display: flex; align-items: center; gap: 6px">
+          <input type="checkbox" id="spxToggle" checked style="width: auto">
+          <span style="color: #f5a623">╍╍</span> S&amp;P 500 (rebased)
+        </label>
       </div>
       <div class="scroll">
-        <svg id="chart" viewBox="0 0 640 300" width="100%" role="img" aria-label="FDCPX NAV line chart"></svg>
+        <svg id="chart" viewBox="0 0 960 340" width="100%" role="img" aria-label="FDCPX NAV line chart"></svg>
       </div>
       <div id="navStats" style="display: flex; flex-wrap: wrap; gap: 4px 20px; font-size: .85rem; margin-top: 6px"></div>
       <p class="note">
         Daily closing NAV from 31 Jul to 9 Oct 2026 (latest data available from the source, Tiingo via StockAnalysis.com);
-        earlier months use sparse NAV observations from public quote pages. Hover a point for its value.
+        earlier months use sparse NAV observations from public quote pages. Orange dashed line: S&P 500 index, rebased to FDCPX’s NAV on the first date both are shown, so you can compare relative moves. S&P data starts 7 Aug and is missing 8–11 Sep, where the line bridges the gap. Hover a point for its value.
         52-week range: $129.65 – $245.39.
       </p>
     </section>
@@ -313,14 +323,8 @@
       ["Net assets", "$3.9B – 4.2B"],
       ["Expense ratio", "0.67%"],
       ["TTM yield", "0.40%"],
-      ["Turnover", "53%"],
       ["# holdings", "45"],
-      ["Top 10 weight", "~66%"],
-      ["Foreign issuers", "35.2%"],
-      ["Cash", "3.3%"],
-      ["52-wk range", "$129.65 – $245.39"],
-      ["Morningstar", "Gold Medalist · Large Growth"],
-      ["Min. investment", "$0 · No load"]
+      ["Top 10 weight", "~66%"]
     ];
 
     document.getElementById("kpis").innerHTML = kpis
@@ -344,19 +348,41 @@
     });
 
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct"];
-    let navRange = "all";
+    let navRange = "6m";
+    let showSpx = true;
+
+    // S&P 500 index daily closes (7 Aug – 9 Oct 2026; 8–11 Sep closes not found)
+    const spxRaw = "08-07:7757.64,08-10:7753.11,08-11:7728.20,08-12:7748.50,08-13:7798.99,08-14:7785.76,08-17:7745.06," +
+      "08-18:7691.76,08-19:7707.98,08-20:7641.16,08-21:7674.37,08-24:7652.86,08-25:7677.28,08-26:7675.70," +
+      "08-27:7730.99,08-28:7711.76,08-31:7686.14,09-01:7631.47,09-02:7666.60,09-03:7747.71,09-04:7718.60," +
+      "09-14:7619.98,09-15:7585.73,09-16:7551.81,09-17:7637.76,09-18:7650.50,09-21:7764.70,09-22:7764.64," +
+      "09-23:7706.03,09-24:7704.13,09-25:7743.41,09-28:7683.69,09-29:7670.84,09-30:7651.54,10-01:7666.45," +
+      "10-02:7722.72,10-05:7773.95,10-06:7818.93,10-07:7801.77,10-08:7765.36,10-09:7811.54";
+
+    const spx = spxRaw.split(",").map(pair => {
+      const [md, v] = pair.split(":");
+      return { date: "2026-" + md, v: parseFloat(v) };
+    });
 
     function drawChart() {
-      const W = 640, H = 300;
+      const W = 960, H = 340;
       const left = 48, right = 16, top = 16, bottom = 30;
       const last = nav[nav.length - 1];
-      const days = { all: 9999, "3m": 92, "1m": 31 }[navRange];
+      const days = { "6m": 183, "3m": 92, "1m": 31 }[navRange];
       const cutoff = +new Date(last.date) - days * 86400000;
       const data = nav.filter(n => +new Date(n.date) >= cutoff);
 
       const t0 = +new Date(data[0].date);
       const t1 = +new Date(last.date);
-      const vals = data.map(n => n.v);
+      // S&P 500 overlay, rebased to FDCPX's NAV on the first common date in the window
+      const spxWin = showSpx ? spx.filter(n => +new Date(n.date) >= cutoff) : [];
+      let overlay = [];
+      if (spxWin.length) {
+        const anchor = nav.find(n => n.date === spxWin[0].date);
+        overlay = spxWin.map(n => ({ date: n.date, raw: n.v, v: n.v / spxWin[0].v * anchor.v }));
+      }
+
+      const vals = data.map(n => n.v).concat(overlay.map(n => n.v));
       const lo = Math.min(...vals), hi = Math.max(...vals);
       const step = (hi - lo) > 60 ? 20 : (hi - lo) > 20 ? 10 : 5;
       const yMin = Math.floor((lo - 2) / step) * step;
@@ -374,7 +400,7 @@
       }
 
       // X labels: months for long ranges, weekly dates for short ones
-      if (navRange === "all") {
+      if (navRange === "6m") {
         for (let m = 2; m <= 9; m++) {
           const d = "2026-" + String(m + 1).padStart(2, "0") + "-01";
           if (+new Date(d) >= t0) {
@@ -395,6 +421,14 @@
       svg += `<polygon points="${X(data[0].date)},${Y(yMin)} ${pts.join(" ")} ${X(last.date)},${Y(yMin)}" fill="var(--ac)" opacity=".12"/>`;
       svg += `<polyline points="${pts.join(" ")}" fill="none" stroke="var(--ac)" stroke-width="2" stroke-linejoin="round"/>`;
 
+      // S&P 500 overlay line
+      if (overlay.length) {
+        svg += `<polyline points="${overlay.map(n => X(n.date) + "," + Y(n.v)).join(" ")}" fill="none" stroke="#f5a623" stroke-width="2" stroke-dasharray="5 3" stroke-linejoin="round"/>`;
+        overlay.forEach(n => {
+          svg += `<circle cx="${X(n.date)}" cy="${Y(n.v)}" r="2" fill="#f5a623"><title>S&P 500 ${n.date}: ${n.raw.toFixed(2)} (rebased $${n.v.toFixed(2)})</title></circle>`;
+        });
+      }
+
       // Points with tooltips (dense data gets smaller dots)
       const r = data.length > 40 ? 2.5 : 4;
       data.forEach((n, i) => {
@@ -403,16 +437,18 @@
         svg += `<circle cx="${X(n.date)}" cy="${Y(n.v)}" r="${r}" fill="var(--ac)"><title>${n.date}: $${n.v.toFixed(2)}${chg}</title></circle>`;
       });
 
-      // Latest value marker
-      svg += `<text x="${X(last.date)}" y="${Y(last.v) - 10}" text-anchor="end" style="fill: var(--tx); font-weight: 600">$${last.v.toFixed(2)}</text>`;
-
       document.getElementById("chart").innerHTML = svg;
 
       // Range summary
       const first = data[0], chgPct = (last.v / first.v - 1) * 100;
       document.getElementById("navStats").innerHTML =
         `<span>Range: <b>$${lo.toFixed(2)} – $${hi.toFixed(2)}</b></span>` +
-        `<span>Change: <b class="${chgPct >= 0 ? "pos" : "neg"}">${fmtPct(chgPct)}</b> (${first.date} → ${last.date})</span>`;
+        `<span>Change: <b class="${chgPct >= 0 ? "pos" : "neg"}">${fmtPct(chgPct)}</b> (${first.date} → ${last.date})</span>` +
+        (overlay.length ? (() => {
+          const o0 = overlay[0], o1 = overlay[overlay.length - 1];
+          const sp = (o1.v / o0.v - 1) * 100, fd = (last.v / o0.v - 1) * 100;
+          return `<span>Since ${o0.date}: FDCPX <b class="${fd >= 0 ? "pos" : "neg"}">${fmtPct(fd)}</b> · S&P 500 <b class="${sp >= 0 ? "pos" : "neg"}">${fmtPct(sp)}</b></span>`;
+        })() : "");
 
       document.querySelectorAll("#navTabs button").forEach(b => {
         b.style.background = b.dataset.r === navRange ? "var(--ac)" : "transparent";
@@ -430,6 +466,11 @@
         drawChart();
       };
     });
+
+    document.getElementById("spxToggle").onchange = e => {
+      showSpx = e.target.checked;
+      drawChart();
+    };
     drawChart();
 
     // ---------- Holdings data ----------
